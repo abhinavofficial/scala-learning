@@ -102,3 +102,62 @@ status :=
   s"Grateful and $e"
 ```
 All the dependent settings are evaluated before and in no particular order.
+
+> You might have noticed "ThisBuild" in sbt.build - this refers to the build level settings for our project. It can therefore also imply that sbt first checks if certain settings have project level settings. It found, it picks that. If not, it looks for the build level settings referred here. If not, it would look for global settings.
+
+## Creating project and subproject in sbt
+
+Three methods to issue command specific to the subproject.
+* first method is to issue the command specific to subproject, e.g. ```calculators/compile```
+* second method is to switch to that subproject and then issue the command as regular.
+```shell
+sbt:scala-learning> project calculators
+# [info] set current project to calculators (in build file:/home/abhinavofficial/Work/scala-learning/)
+sbt:scala-learning> ;clean ;compile
+```
+* finally, we can do the same by defining the relationships between the (sub)projects. The relationship is hierarchical and the parent node is called the aggregator. We can do this by calling aggregate on it and telling what all projects it aggregates on. This way, any command issue to the root is broadcast to all of its aggregated subprojects. This is most commonly used for building and shipping out project.
+
+> If there are multiple subprojects, and you do not create an aggregate relationship, sbt creates one for you.
+> To run the main method, you would still need to do it as first method explained above.
+
+
+## Scope
+A scope is a combination of three dimensions; think of them as a cube, X, Y and Z. The axis are known as scope axis. Now, any point inside the cube is a unique combination of these three values. Keys in sbt are similar to a point definition within these dimensions, which are called, **project**, **config** and **task** within sbt. A project in sbt are also known as multi-modules in sbt. A config is the context of the build and the most common values of this are **Compile**, **Test** and **Runtime**. A task is the function in the build definition that executes everything it is called, e.g. run, package, clean, etc.
+
+Please note that all the three are optional with sbt's default behaviour to search **current project** for project, **Compile** and then **Test** (in the same order) for config, tasks only if provided.
+
+We can also explicitly tell which Main class to run using runMain task. Example
+```shell
+sbt:scala-learning> calculators/runMain CompoundInterest 5000 5 10
+```
+
+## Testing
+Using ScalaTest
+use ```;test``` to run test or ```~test``` watch for changes and run tests automatically.
+
+## Managing Dependencies and Duplications
+Keeping dependencies inside build.sbt poses maintenance challenges. sbt does not allow any class or object level definition inside the build.sbt file. This is where project folder comes into picture. Project folder can contain other scala files that sbt scans and uses in order to build the project.
+
+## Packaging the project
+We will use sbt native packager.
+A plugin extends the pull definition by adding new settings. With plugins, we can utilize the open source work done by others to accomplish common tasks, such as packaging, etc. 
+
+### How to use sbt native packager
+* Add plugin to project/plugins.sbt under project folder ```addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.8.1")```
+* Specify the type of packaging format required. For creating the jar files, we need to enable the plugin with the JavaAppPackaging format. ```enablePlugins(JavaAppPackaging)``` in sbt.build within each project settings
+* We need to run the settings provided by the plugin to create the packaging. ```;clean ;stage```
+
+Another packaging that sbt-native-packager can provide is wrapping your project in docker. Use  ```enablePlugins(DockerPlugin)``` in sbt.built for each project. You also need to add docker commands to define the entry point.
+
+```shell
+dockerCommands := dockerCommands.value.filterNot {
+      case ExecCmd("ENTRYPOINT", _) => true
+      case _ => false
+    },
+    dockerCommands ++= Seq(ExecCmd("ENTRYPOINT", "/opt/docker/bin/net-worth"))
+```
+
+## Continuous Integration and Continuous Deployment
+There are many sources available, but we are going to use Travis.ci in our project for Continuous Integration and bintray as artifact distribution platform.
+
+More details on this [here](cicd.md)
