@@ -51,6 +51,26 @@ The only catch in this case is that sbt requires JVM and JIT spin up every singl
 * project/ - build support files
 * target
 
+```
+src/
+  main/
+    resources/
+       <files to include in main jar here>
+    scala/
+       <main Scala sources>
+    java/
+       <main Java sources>
+  test/
+    resources
+       <files to include in test jar here>
+    scala/
+       <test Scala sources>
+    java/
+       <test Java sources>
+Other directories in src/ will be ignored. Additionally, all hidden
+directories will be ignored.
+```
+
 ## Project Configuration Setting
 Project is configured using key value pairs. The syntax is divided into three parts:
 
