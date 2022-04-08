@@ -1,3 +1,7 @@
+# Learn Scala
+
+
+
 # Tips
 
 ## Function Values

@@ -20,3 +20,5 @@ Installed sbt
 Installed sbtn
 Installed scalafmt
 ```
+
+## Using sbt
