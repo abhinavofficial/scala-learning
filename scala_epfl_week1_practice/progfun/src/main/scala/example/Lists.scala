@@ -53,4 +53,65 @@ object Lists {
       if (m > xs(0)) m else xs(0)
     }
   }
+
+
+  def and(x: Boolean, y: => Boolean): Boolean = {
+    if (x) y else false
+  }
+
+  def or(x: Boolean, y: => Boolean): Boolean = {
+    if (x) true else y
+  }
+
+  def sqrt(x: Double) = {
+
+    def isGoodEnough(guess: Double): Boolean = {
+      math.abs((guess * guess) - x) / x < 0.001
+    }
+
+    def improve(guess: Double): Double = (guess + x / guess) / 2
+
+    def sqrIter(guess: Double): Double = {
+      if (isGoodEnough(guess)) guess
+      else sqrIter(improve(guess))
+    }
+
+    sqrIter(1.0)
+  }
+
+  def factorial_non_tail(n: Int) : Int = {
+    if (n==0) 1 else n * factorial_non_tail(n -1 )
+  }
+
+  def factorial_tail(n: Int) : Int = {
+    def loop(acc: Int, n: Int) : Int =
+      if (n==0) acc
+      else loop( acc * n, n-1)
+
+    loop(1, n)
+  }
+
+  def pascal(c: Int, r: Int): Int = {
+    if (c > r) 0
+    else if (c <= 0 || r <= 0 || c == r) 1
+    else pascal(c-1, r - 1) + pascal(c, r - 1)
+  }
+
+  def balance(chars: List[Char]): Boolean = {
+    def incrementalBalance(acc: Int, subChars: List[Char]) : Int = {
+      println(s"acc:$acc; List:$subChars")
+      if (subChars.isEmpty) acc else {
+        val distinction = (if (subChars.head == ')') -1
+            else if (subChars.head == '(' && acc >= 0)  1
+            else 0)
+        incrementalBalance(acc + distinction, subChars.tail)
+      }
+    }
+    if (incrementalBalance(0, chars) == 0) true else false
+  }
+
+  def countChange(money: Int, coins: List[Int]): Int = {
+
+  }
+
 }
