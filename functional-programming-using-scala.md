@@ -18,3 +18,7 @@ One simple rule: One evaluates a function application, f(e1,..,en)
 
 This is called substitution.
 
+## Section 2
+* [High order functions](documents/higher-order-functions.md)
+* [Scala Syntax Summary](documents/scala-syntax-summary.md)
+* [Functions and Data](documents/functions-and-data.md)
